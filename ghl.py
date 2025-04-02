@@ -166,7 +166,6 @@ def search_deal(contact_id, URL, headers):
 def create_deal(contact_id, email, name, URL, headers):
     data = {
         "title": f"{email} - {name}",
-        "name": f"{email} - {name}",
         "status": "open",
         "pipelineId": "UuhQYJN98JQKkWP0HcC6",
         "stageId": "0eaab081-3e7a-4b46-8b35-0fd7135c1540",
@@ -188,7 +187,6 @@ def create_deal(contact_id, email, name, URL, headers):
 def update_deal(deal_id, contact_id, email, name, URL, headers):
     data = {
         "title": f"{email} - {name}",
-        "name": f"{email} - {name}",
         "status": "open", 
         "pipelineId": "UuhQYJN98JQKkWP0HcC6", 
         "stageId": "0eaab081-3e7a-4b46-8b35-0fd7135c1540",
