@@ -69,7 +69,7 @@ async def webhook_endpoint(payload: WebhookData):
             contact_id = new_contact["contact"]["id"]
             action_logger.info(f"Created contact: {new_contact}")
             
-            create_deal(contact_id, email, name, phone, URL, headers)
+            create_deal(contact_id, email, name, URL, headers)
             action_logger.info(f"Created deal for contact_id={contact_id}")
         # contact exist
         else:
@@ -80,7 +80,7 @@ async def webhook_endpoint(payload: WebhookData):
             email, name, phone = updated_contact["contact"]["email"], updated_contact["contact"]["fullNameLowerCase"], updated_contact["contact"]["phone"]
             deal = search_deal(contact_id, email, URL, headers)
             if deal is None:
-                create_deal(contact_id, email, name, phone, URL, headers)
+                create_deal(contact_id, email, name, URL, headers)
                 action_logger.info(f"Created deal for contact_id={contact_id}")
             else:
                 deal_id = deal.get('id')
