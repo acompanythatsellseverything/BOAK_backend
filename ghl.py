@@ -60,31 +60,31 @@ async def webhook_endpoint(payload: WebhookData):
             "Content-Type": "application/json"
         }
 
-        search_contact_ghl = search_contact(payload.data["email"], API_KEY, URL, headers)  # Search contact
+        search_contact_ghl = search_contact(payload.data["email"], URL, headers)  # Search contact
 
         # contact doesnt exist
         if "email" in search_contact_ghl and search_contact_ghl["email"]["message"] == "The email address is invalid.":
             email, name, phone = payload.data["email"], payload.data["name"], payload.data["phone"]
-            new_contact = create_contact(email, name, phone, API_KEY, URL, headers)  # Create contact
+            new_contact = create_contact(email, name, phone, URL, headers)  # Create contact
             contact_id = new_contact["contact"]["id"]
             action_logger.info(f"Created contact: {new_contact}")
             
-            create_deal(contact_id, email, name, phone, API_KEY, URL, headers)
+            create_deal(contact_id, email, name, phone, URL, headers)
             action_logger.info(f"Created deal for contact_id={contact_id}")
         # contact exist
         else:
             contact_id = search_contact_ghl["contacts"][0]["id"]
-            updated_contact = update_contact(contact_id, payload.data["name"], API_KEY, URL, headers)
+            updated_contact = update_contact(contact_id, payload.data["name"], URL, headers)
             action_logger.info(f"Updated contact: {updated_contact}")
             
             email, name, phone = updated_contact["contact"]["email"], updated_contact["contact"]["fullNameLowerCase"], updated_contact["contact"]["phone"]
-            deal = search_deal(contact_id, email, API_KEY, URL, headers)
+            deal = search_deal(contact_id, email, URL, headers)
             if deal is None:
-                create_deal(contact_id, email, name, phone, API_KEY, URL, headers)
+                create_deal(contact_id, email, name, phone, URL, headers)
                 action_logger.info(f"Created deal for contact_id={contact_id}")
             else:
                 deal_id = deal.get('id')
-                update_deal(deal_id, contact_id, email, name, API_KEY, URL, headers)
+                update_deal(deal_id, contact_id, email, name, URL, headers)
                 action_logger.info(f"Updated deal: deal_id={deal_id}, contact_id={contact_id}")
 
         return {"status": "ok"}
