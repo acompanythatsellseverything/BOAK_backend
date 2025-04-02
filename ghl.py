@@ -6,6 +6,21 @@ import logging
 import uuid
 from dotenv import load_dotenv
 import os
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
+
+
+slack_token = os.getenv("SLACK_TOKEN")
+client = WebClient(token=slack_token)
+
+def send_slack_notification(message: str):
+    try:
+        response = client.chat_postMessage(
+            channel="#your-channel",  # Заміни на свій канал
+            text=message
+        )
+    except SlackApiError as e:
+        error_logger.error(f"Slack notification error: {e.response['error']}")
 
 # logs settings
 logging.basicConfig(level=logging.INFO)
@@ -60,36 +75,37 @@ async def webhook_endpoint(payload: WebhookData):
             "Content-Type": "application/json"
         }
 
-        search_contact_ghl = search_contact(payload.data["email"], API_KEY, URL, headers)  # Search contact
+        search_contact_ghl = search_contact(payload.data["email"], URL, headers)  # Search contact
 
         # contact doesnt exist
         if "email" in search_contact_ghl and search_contact_ghl["email"]["message"] == "The email address is invalid.":
             email, name, phone = payload.data["email"], payload.data["name"], payload.data["phone"]
-            new_contact = create_contact(email, name, phone, API_KEY, URL, headers)  # Create contact
+            new_contact = create_contact(email, name, phone, URL, headers)  # Create contact
             contact_id = new_contact["contact"]["id"]
             action_logger.info(f"Created contact: {new_contact}")
             
-            create_deal(contact_id, email, name, phone, API_KEY, URL, headers)
+            create_deal(contact_id, email, name, URL, headers)
             action_logger.info(f"Created deal for contact_id={contact_id}")
         # contact exist
         else:
             contact_id = search_contact_ghl["contacts"][0]["id"]
-            updated_contact = update_contact(contact_id, payload.data["name"], API_KEY, URL, headers)
+            updated_contact = update_contact(contact_id, payload.data["name"], URL, headers)
             action_logger.info(f"Updated contact: {updated_contact}")
             
             email, name, phone = updated_contact["contact"]["email"], updated_contact["contact"]["fullNameLowerCase"], updated_contact["contact"]["phone"]
-            deal = search_deal(contact_id, email, API_KEY, URL, headers)
+            deal = search_deal(contact_id, URL, headers)
             if deal is None:
-                create_deal(contact_id, email, name, phone, API_KEY, URL, headers)
+                create_deal(contact_id, email, name, URL, headers)
                 action_logger.info(f"Created deal for contact_id={contact_id}")
             else:
                 deal_id = deal.get('id')
-                update_deal(deal_id, contact_id, email, name, API_KEY, URL, headers)
+                update_deal(deal_id, contact_id, email, name, URL, headers)
                 action_logger.info(f"Updated deal: deal_id={deal_id}, contact_id={contact_id}")
 
         return {"status": "ok"}
     except Exception as e:
         error_logger.error(f"Error in webhook processing: {str(e)}")
+        send_slack_notification(e)
         return {"status": "error", "message": str(e)}
 
 #----------------------------#
@@ -103,6 +119,7 @@ def search_contact(email: str, URL, headers):
         return result
     except requests.exceptions.JSONDecodeError as e:
         error_logger.error(f"Failed to decode JSON response for search_contact: {str(e)}")
+        send_slack_notification(e)
         return {"error": "Failed to decode JSON response"}
 
 #----------------------------#
@@ -122,6 +139,7 @@ def create_contact(email, name, phone, URL, headers):
         return result
     except requests.exceptions.JSONDecodeError as e:
         error_logger.error(f"Failed to decode JSON response for create_contact: {str(e)}")
+        send_slack_notification(e)
         return {"error": "Failed to decode JSON response"}
     
 #----------------------------#
@@ -140,6 +158,7 @@ def update_contact(id, name,  URL, headers):
         return result
     except requests.exceptions.JSONDecodeError as e:
         error_logger.error(f"Failed to decode JSON response for update_contact: {str(e)}")
+        send_slack_notification(e)
         return {"error": "Failed to decode JSON response"}
 
 #----------------------------#
@@ -158,6 +177,7 @@ def search_deal(contact_id, URL, headers):
         return None
     except requests.exceptions.JSONDecodeError as e:
         error_logger.error(f"Failed to decode JSON response for search_deal: {str(e)}")
+        send_slack_notification(e)
         return {"error": "Failed to decode JSON response"}
 
 #----------------------------#
@@ -166,7 +186,6 @@ def search_deal(contact_id, URL, headers):
 def create_deal(contact_id, email, name, URL, headers):
     data = {
         "title": f"{email} - {name}",
-        "name": f"{email} - {name}",
         "status": "open",
         "pipelineId": "UuhQYJN98JQKkWP0HcC6",
         "stageId": "0eaab081-3e7a-4b46-8b35-0fd7135c1540",
@@ -180,6 +199,7 @@ def create_deal(contact_id, email, name, URL, headers):
         return result
     except requests.exceptions.JSONDecodeError as e:
         error_logger.error(f"Failed to decode JSON response for create_deal: {str(e)}")
+        send_slack_notification(e)
         return {"error": "Failed to decode JSON response"}
 
 #----------------------------#
@@ -188,7 +208,6 @@ def create_deal(contact_id, email, name, URL, headers):
 def update_deal(deal_id, contact_id, email, name, URL, headers):
     data = {
         "title": f"{email} - {name}",
-        "name": f"{email} - {name}",
         "status": "open", 
         "pipelineId": "UuhQYJN98JQKkWP0HcC6", 
         "stageId": "0eaab081-3e7a-4b46-8b35-0fd7135c1540",
@@ -201,6 +220,7 @@ def update_deal(deal_id, contact_id, email, name, URL, headers):
         action_logger.info(f"Deal updated: {result}")
         return result
     except requests.exceptions.JSONDecodeError as e:
+        send_slack_notification(e)
         error_logger.error(f"Failed to decode JSON response for update_deal: {str(e)}")
 
 if __name__ == "__main__":
