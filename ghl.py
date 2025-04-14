@@ -105,7 +105,7 @@ async def webhook_endpoint(payload: WebhookData):
         return {"status": "ok"}
     except Exception as e:
         error_logger.error(f"Error in webhook processing: {str(e)}")
-        send_slack_notification(e)
+        send_slack_notification(f'{e}')
         return {"status": "error", "message": str(e)}
 
 #----------------------------#
@@ -119,7 +119,7 @@ def search_contact(email: str, URL, headers):
         return result
     except requests.exceptions.JSONDecodeError as e:
         error_logger.error(f"Failed to decode JSON response for search_contact: {str(e)}")
-        send_slack_notification(e)
+        send_slack_notification(f'{e}')
         return {"error": "Failed to decode JSON response"}
 
 #----------------------------#
@@ -139,7 +139,7 @@ def create_contact(email, name, phone, URL, headers):
         return result
     except requests.exceptions.JSONDecodeError as e:
         error_logger.error(f"Failed to decode JSON response for create_contact: {str(e)}")
-        send_slack_notification(e)
+        send_slack_notification(f'{e}')
         return {"error": "Failed to decode JSON response"}
     
 #----------------------------#
@@ -158,7 +158,7 @@ def update_contact(id, name,  URL, headers):
         return result
     except requests.exceptions.JSONDecodeError as e:
         error_logger.error(f"Failed to decode JSON response for update_contact: {str(e)}")
-        send_slack_notification(e)
+        send_slack_notification(f'{e}')
         return {"error": "Failed to decode JSON response"}
 
 #----------------------------#
@@ -177,7 +177,7 @@ def search_deal(contact_id, URL, headers):
         return None
     except requests.exceptions.JSONDecodeError as e:
         error_logger.error(f"Failed to decode JSON response for search_deal: {str(e)}")
-        send_slack_notification(e)
+        send_slack_notification(f'{e}')
         return {"error": "Failed to decode JSON response"}
 
 #----------------------------#
@@ -199,7 +199,7 @@ def create_deal(contact_id, email, name, URL, headers):
         return result
     except requests.exceptions.JSONDecodeError as e:
         error_logger.error(f"Failed to decode JSON response for create_deal: {str(e)}")
-        send_slack_notification(e)
+        send_slack_notification(f'{e}')
         return {"error": "Failed to decode JSON response"}
 
 #----------------------------#
@@ -220,7 +220,7 @@ def update_deal(deal_id, contact_id, email, name, URL, headers):
         action_logger.info(f"Deal updated: {result}")
         return result
     except requests.exceptions.JSONDecodeError as e:
-        send_slack_notification(e)
+        send_slack_notification(f'{e}')
         error_logger.error(f"Failed to decode JSON response for update_deal: {str(e)}")
 
 if __name__ == "__main__":
