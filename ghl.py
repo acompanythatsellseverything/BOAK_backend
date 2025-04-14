@@ -16,7 +16,7 @@ client = WebClient(token=slack_token)
 def send_slack_notification(message):
     try:
         response = client.chat_postMessage(
-            channel="#your-channel",  # Заміни на свій канал
+            channel=os.getenv("CHANnEL_ID"),
             text=message
         )
     except SlackApiError as e:
