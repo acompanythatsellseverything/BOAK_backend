@@ -12,13 +12,14 @@ from slack_sdk.errors import SlackApiError
 client = WebClient(token=os.getenv("SLACK_TOKEN"))
 
 def send_slack_notification(message: str):
+    webhook_url = os.getenv("SLACK_TOKEN")
     try:
-        client.chat_postMessage(
-            channel=os.getenv("CHANNEL_ID"),
-            text=message
-        )
-    except SlackApiError as e:
-        error_logger.error(f"Slack notification error: {e.response['error']}")
+        payload = {"text": message}
+        response = requests.post(webhook_url, json=payload)
+        if response.status_code != 200:
+            error_logger.error(f"Slack webhook failed: {response.text}")
+    except Exception as e:
+        error_logger.error(f"Slack notification error: {str(e)}")
 
 # logs settings
 logging.basicConfig(level=logging.INFO)
