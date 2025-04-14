@@ -9,14 +9,12 @@ import os
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
+client = WebClient(token=os.getenv("SLACK_TOKEN"))
 
-slack_token = os.getenv("SLACK_TOKEN")
-client = WebClient(token=slack_token)
-
-def send_slack_notification(message):
+def send_slack_notification(message: str):
     try:
-        response = client.chat_postMessage(
-            channel=os.getenv("CHANnEL_ID"),
+        client.chat_postMessage(
+            channel=os.getenv("CHANNEL_ID"),
             text=message
         )
     except SlackApiError as e:
@@ -64,8 +62,8 @@ class WebhookData(BaseModel):
 async def webhook_endpoint(payload: WebhookData):
     request_id = str(uuid.uuid4())
     webhook_logger.info(f"Received webhook: {request_id} | {payload.model_dump_json()}")
-    action_logger.info(f"\n--- Request ID: {request_id} --- Data: {payload.json()} ---")
-    error_logger.error(f"\n--- Request ID: {request_id} --- Data: {payload.json()} ---")
+    action_logger.info(f"\n--- Request ID: {request_id} --- Data: {payload.model_dump_json()} ---")
+    error_logger.error(f"\n--- Request ID: {request_id} --- Data: {payload.model_dump_json()} ---")
     try:
         API_KEY = os.getenv("API_KEY")
         URL = f"https://rest.gohighlevel.com"
