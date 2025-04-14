@@ -13,7 +13,7 @@ from slack_sdk.errors import SlackApiError
 slack_token = os.getenv("SLACK_TOKEN")
 client = WebClient(token=slack_token)
 
-def send_slack_notification(message: str):
+def send_slack_notification(message):
     try:
         response = client.chat_postMessage(
             channel="#your-channel",  # Заміни на свій канал
