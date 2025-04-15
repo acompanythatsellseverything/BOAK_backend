@@ -6,6 +6,7 @@ from ghl_logging import *
 import uuid
 from dotenv import load_dotenv
 import os
+from typing import Optional
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
@@ -46,7 +47,7 @@ class GoHighLevelAPI:
             return result
         except requests.exceptions.JSONDecodeError as e:
             error_logger.error(f"Failed to decode JSON response for search_contact: {str(e)}")
-            self.send_slack_notification(f'{e}')
+            self.send_slack_notification(f'Failed to decode JSON response for search_contact: {e}')
             return {"error": "Failed to decode JSON response"}
         
     #--------------------------
@@ -62,17 +63,20 @@ class GoHighLevelAPI:
             return result
         except requests.exceptions.JSONDecodeError as e:
             error_logger.error(f"Failed to decode JSON response for search_contact: {str(e)}")
-            self.send_slack_notification(f'{e}')
+            self.send_slack_notification(f"Failed to decode JSON response for search_contact: {str(e)}")
             return {"error": "Failed to decode JSON response"}
 
     #--------------------------
     #   CREATE CONTACT(email)
     # ------------------------- 
-    def create_contact(self, email, name, phone):
+    def create_contact(self, email, name, phone, url):
         data_raw = {
             "email": email,
             "name": name,
-            "phone": phone
+            "phone": phone,
+            "customField": {
+                "npIW2acDJLVxtzLav4pg": url
+            }
         }
         response = requests.post(f'{self.URL}/v1/contacts/', headers=self.headers, json=data_raw)
         try:
@@ -81,16 +85,19 @@ class GoHighLevelAPI:
             return result
         except requests.exceptions.JSONDecodeError as e:
             error_logger.error(f"Failed to decode JSON response for create_contact: {str(e)}")
-            self.send_slack_notification(f'{e}')
+            self.send_slack_notification(f"Failed to decode JSON response for create_contact: {str(e)}")
             return {"error": "Failed to decode JSON response"}
 
     #--------------------------
     #   CREATE CONTACT(phone)
     # ------------------------- 
-    def create_contact_small_form(self, name, phone):
+    def create_contact_small_form(self, name, phone, url):
         data_raw = {
             "name": name,
-            "phone": phone
+            "phone": phone,
+            "customField": {
+                "npIW2acDJLVxtzLav4pg": url
+            }
         }
         response = requests.post(f'{self.URL}/v1/contacts/', headers=self.headers, json=data_raw)
         try:
@@ -99,15 +106,19 @@ class GoHighLevelAPI:
             return result
         except requests.exceptions.JSONDecodeError as e:
             error_logger.error(f"Failed to decode JSON response for create_contact: {str(e)}")
-            self.send_slack_notification(f'{e}')
+            self.send_slack_notification(f"Failed to decode JSON response for create_contact: {str(e)}")
             return {"error": "Failed to decode JSON response"}
     
     #--------------------------
     #       UPDATE CONTACT
     # ------------------------- 
-    def update_contact(self, id, name):
+    def update_contact(self, id, name, phone, url):
         data_raw = {
-            "name": name
+            "name": name,
+            "phone": phone,
+            "customField": {
+                "npIW2acDJLVxtzLav4pg": url
+            }
         }
         response = requests.put(f'{self.URL}/v1/contacts/{id}', headers=self.headers, json=data_raw)
         try:
@@ -116,7 +127,7 @@ class GoHighLevelAPI:
             return result
         except requests.exceptions.JSONDecodeError as e:
             error_logger.error(f"Failed to decode JSON response for update_contact: {str(e)}")
-            self.send_slack_notification(f'{e}')
+            self.send_slack_notification(f"Failed to decode JSON response for update_contact: {str(e)}")
             return {"error": "Failed to decode JSON response"}
 
     #--------------------------
@@ -134,7 +145,7 @@ class GoHighLevelAPI:
             return None
         except requests.exceptions.JSONDecodeError as e:
             error_logger.error(f"Failed to decode JSON response for search_deal: {str(e)}")
-            self.send_slack_notification(f'{e}')
+            self.send_slack_notification(f"Failed to decode JSON response for search_deal: {str(e)}")
             return {"error": "Failed to decode JSON response"}
 
     #--------------------------
@@ -155,7 +166,7 @@ class GoHighLevelAPI:
             return result
         except requests.exceptions.JSONDecodeError as e:
             error_logger.error(f"Failed to decode JSON response for create_deal: {str(e)}")
-            self.send_slack_notification(f'{e}')
+            self.send_slack_notification(f"Failed to decode JSON response for create_deal: {str(e)}")
             return {"error": "Failed to decode JSON response"}
 
     #--------------------------
@@ -176,7 +187,7 @@ class GoHighLevelAPI:
             return result
         except requests.exceptions.JSONDecodeError as e:
             error_logger.error(f"Failed to decode JSON response for create_deal: {str(e)}")
-            self.send_slack_notification(f'{e}')
+            self.send_slack_notification(f"Failed to decode JSON response for create_deal: {str(e)}")
             return {"error": "Failed to decode JSON response"}
 
     #--------------------------
@@ -196,7 +207,7 @@ class GoHighLevelAPI:
             action_logger.info(f"Deal updated: {result}")
             return result
         except requests.exceptions.JSONDecodeError as e:
-            self.send_slack_notification(f'{e}')
+            self.send_slack_notification(f'Failed to decode JSON response for update_deal: {e}')
             error_logger.error(f"Failed to decode JSON response for update_deal: {str(e)}")
 
 
@@ -217,7 +228,7 @@ class GoHighLevelAPI:
             action_logger.info(f"Deal updated: {result}")
             return result
         except requests.exceptions.JSONDecodeError as e:
-            self.send_slack_notification(f'{e}')
+            self.send_slack_notification(f'Failed to decode JSON response for update_deal: {e}')
             error_logger.error(f"Failed to decode JSON response for update_deal: {str(e)}")
 
     #--------------------------
@@ -237,13 +248,14 @@ class GoHighLevelAPI:
             print(f'res:{result}')
             return result
         except requests.exceptions.JSONDecodeError as e:
-            self.send_slack_notification(f'{e}')
+            self.send_slack_notification(f'Failed to decode JSON response for add_notes: {e}')
             error_logger.error(f"Failed to decode JSON response for add_notes: {str(e)}")
     
 
 class WebhookData(BaseModel):
     event: str
     data: dict
+    utm_url: Optional[str] = None
 
 
 app = FastAPI()
@@ -255,6 +267,7 @@ async def webhook_endpoint(payload: WebhookData):
     action_logger.info(f"\n--- Request ID: {request_id} --- Data: {payload.model_dump_json()} ---")
     error_logger.error(f"\n--- Request ID: {request_id} --- Data: {payload.model_dump_json()} ---")
     comment_body = payload.data["comment"]
+    url = payload.utm_url
 
     try:
         ghl_api = GoHighLevelAPI()
@@ -263,7 +276,7 @@ async def webhook_endpoint(payload: WebhookData):
         # contact doesn't exist
         if "email" in search_contact_ghl and search_contact_ghl["email"]["message"] == "The email address is invalid.":
             email, name, phone = payload.data["email"], payload.data["name"], payload.data["phone"]
-            new_contact = ghl_api.create_contact(email, name, phone)
+            new_contact = ghl_api.create_contact(email, name, phone, url)
             contact_id = new_contact["contact"]["id"]
             deal_data = ghl_api.create_deal(contact_id, email, name)
             deal_id = deal_data["id"]
@@ -271,7 +284,7 @@ async def webhook_endpoint(payload: WebhookData):
         # contact exists
         else:
             contact_id = search_contact_ghl["contacts"][0]["id"]
-            updated_contact = ghl_api.update_contact(contact_id, payload.data["name"])
+            ghl_api.update_contact(contact_id, payload.data["name"], payload.data["phone"], url)
             deal = ghl_api.search_deal(contact_id)
             if deal is None:
                 deal_data = ghl_api.create_deal(contact_id, payload.data["email"], payload.data["name"])
@@ -286,7 +299,7 @@ async def webhook_endpoint(payload: WebhookData):
         return {"status": "ok"}
     except Exception as e:
         error_logger.error(f"Error in webhook processing: {str(e)}")
-        ghl_api.send_slack_notification(f'{e}')
+        ghl_api.send_slack_notification(f'Error in webhook processing: {e}')
         return {"status": "error", "message": str(e)}
 
 
@@ -296,6 +309,7 @@ async def webhook_small_form_endpoint(payload: WebhookData):
     webhook_logger.info(f"Received webhook: {request_id} | {payload.model_dump_json()}")
     action_logger.info(f"\n--- Request ID: {request_id} --- Data: {payload.model_dump_json()} ---")
     error_logger.error(f"\n--- Request ID: {request_id} --- Data: {payload.model_dump_json()} ---")
+    url = payload.utm_url
 
     try:
         ghl_api = GoHighLevelAPI()
@@ -304,16 +318,15 @@ async def webhook_small_form_endpoint(payload: WebhookData):
         # contact doesn't exist
         if "phone" in search_contact_ghl and search_contact_ghl["phone"]["message"] == "The phone number is invalid.":
             name, phone = payload.data["name"], payload.data["phone"]
-            new_contact = ghl_api.create_contact_small_form(name, phone)
+            new_contact = ghl_api.create_contact_small_form(name, phone, url)
             contact_id = new_contact["contact"]["id"]
             ghl_api.create_deal_small_form(contact_id,  phone, name)
 
         # contact exists
         else:
             contact_id = search_contact_ghl["contacts"][0]["id"]
-            ghl_api.update_contact(contact_id, payload.data["name"])
+            ghl_api.update_contact(contact_id, payload.data["name"], payload.data["phone"], url)
             deal = ghl_api.search_deal(contact_id)
-            print('DEAL',deal)
             if deal is None:
                 ghl_api.create_deal_small_form(contact_id, payload.data["phone"], payload.data["name"])
             else:
@@ -323,7 +336,7 @@ async def webhook_small_form_endpoint(payload: WebhookData):
     
     except Exception as e:
         error_logger.error(f"Error in webhook processing: {str(e)}")
-        ghl_api.send_slack_notification(f'{e}')
+        ghl_api.send_slack_notification(f'Error in webhook processing: {e}')
         return {"status": "error", "message": str(e)}
 
 if __name__ == "__main__":
