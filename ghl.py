@@ -7,9 +7,8 @@ import uuid
 from dotenv import load_dotenv
 import os
 from typing import Optional
-
-# from slack_sdk import WebClient
-# from slack_sdk.errors import SlackApiError
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
 
 
 class GoHighLevelAPI:
@@ -27,15 +26,15 @@ class GoHighLevelAPI:
     #--------------------------
     # SLACK ERROR NOTIFICATIONS
     # ------------------------- 
-    # def send_slack_notification(self, message: str):
-    #     try:
-    #         webhook_url = os.getenv("SLACK_TOKEN")
-    #         payload = {"text": message}
-    #         response = requests.post(webhook_url, json=payload)
-    #         if response.status_code != 200:
-    #             error_logger.error(f"Slack webhook failed: {response.text}")
-    #     except Exception as e:
-    #         error_logger.error(f"Slack notification error: {str(e)}")
+    def send_slack_notification(self, message: str):
+        try:
+            webhook_url = os.getenv("SLACK_TOKEN")
+            payload = {"text": message}
+            response = requests.post(webhook_url, json=payload)
+            if response.status_code != 200:
+                error_logger.error(f"Slack webhook failed: {response.text}")
+        except Exception as e:
+            error_logger.error(f"Slack notification error: {str(e)}")
 
     #--------------------------
     #   SEARCH CONTACT(email)
