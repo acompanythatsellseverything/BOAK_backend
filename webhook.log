@@ -1,1 +1,0 @@
-2025-04-14 16:42:54,723 - Received webhook: df0e613b-9e52-446f-8931-911902f61f3c | {"event":"some_event","data":{"email":"ivan.poiakov@gmail.com","name":"Ivan Test","phone":"380663132621"}}

@@ -1,0 +1,48 @@
+2025-04-14 17:49:43,509 - 
+--- Request ID: f2ae2326-29d0-441e-9565-3f4bc4a3c32f --- Data: {"event":"some_event","data":{"email":"test.poiakov@gmail.com","name":"Ivan Test","phone":"380663132621","comment":""}} ---
+2025-04-14 17:56:44,655 - 
+--- Request ID: 3b7d8531-41a9-40da-a5dc-9dfe2897f590 --- Data: {"event":"some_event","data":{"email":"test.poiakov@gmail.com","name":"Ivan Test","phone":"380663132621","comment":"test"}} ---
+2025-04-14 17:59:53,436 - 
+--- Request ID: ee67e551-be70-4f82-8732-239ba38c428b --- Data: {"event":"some_event","data":{"email":"test.poiakov@gmail.com","name":"Ivan Test","phone":"380663132621","comment":"test"}} ---
+2025-04-14 18:00:33,983 - 
+--- Request ID: 02b64d0b-9196-4986-8e9b-f383fbee06b4 --- Data: {"event":"some_event","data":{"email":"test.poiakov@gmail.com","name":"Ivan Test","phone":"380663132621","comment":"test"}} ---
+2025-04-14 18:09:04,044 - 
+--- Request ID: 27a34830-464c-4d06-8ea9-131c210e0f3b --- Data: {"event":"some_event","data":{"email":"test1.poiakov@gmail.com","name":"Ivan Test","phone":"380663132622","comment":"test"}} ---
+2025-04-14 18:12:12,492 - 
+--- Request ID: 6759c6f2-bcb2-49a6-be81-714139f511d3 --- Data: {"event":"some_event","data":{"email":"test1.poiakov@gmail.com","name":"Ivan Test","phone":"380663132622","comment":"test"}} ---
+2025-04-14 18:12:14,098 - Error in webhook processing: cannot access local variable 'deal_id' where it is not associated with a value
+2025-04-14 18:13:18,965 - 
+--- Request ID: 3324d2b7-715b-46c1-9a96-05cad8211f29 --- Data: {"event":"some_event","data":{"email":"test1.poiakov@gmail.com","name":"Ivan Test","phone":"380663132622","comment":"test"}} ---
+2025-04-14 18:13:20,901 - Error in webhook processing: cannot access local variable 'deal_id' where it is not associated with a value
+2025-04-15 11:39:25,644 - 
+--- Request ID: d4c24e10-810a-4c6a-9532-9f8fb53e621f --- Data: {"event":"some_event","data":{"email":"test1.poiakov@gmail.com","name":"Ivan Test","phone":"380663132622","comment":"test"}} ---
+2025-04-15 11:41:59,351 - 
+--- Request ID: 07d7ff11-ddf8-4ddd-b2b9-b1cfb99688a3 --- Data: {"event":"some_event","data":{"email":"test1.poiakov@gmail.com","name":"Ivan Test","phone":"380663132622","comment":"test"}} ---
+2025-04-15 11:44:09,033 - 
+--- Request ID: ce664219-addf-4bc8-8127-6ff6988f2771 --- Data: {"event":"some_event","data":{"email":"test1.poiakov@gmail.com","name":"Ivan Test","phone":"380663132622","comment":"test"}} ---
+2025-04-15 11:47:19,222 - 
+--- Request ID: 9cdf4a2e-6949-4c0e-8f6d-481d50f4db7a --- Data: {"event":"some_event","data":{"email":"test1.poiakov@gmail.com","name":"Ivan Test","phone":"380663132622","comment":"test"}} ---
+2025-04-15 11:51:06,730 - 
+--- Request ID: 67b52692-b43d-46f4-b842-6e344ed0eb3f --- Data: {"event":"some_event","data":{"email":"test1.poiakov@gmail.com","name":"Ivan Test","phone":"380663132622","comment":"test"}} ---
+2025-04-15 11:52:17,006 - 
+--- Request ID: c76e80b0-5b14-4ad0-a38a-10c7e440da77 --- Data: {"event":"some_event","data":{"email":"test1.poiakov@gmail.com","name":"Ivan Test","phone":"380663132622","comment":"test"}} ---
+2025-04-15 11:54:52,093 - 
+--- Request ID: 5b015e0e-7f52-467f-82eb-8db134ab6cbc --- Data: {"event":"some_event","data":{"email":"test1.poiakov@gmail.com","name":"Ivan Test","phone":"380663132622","comment":"test"}} ---
+2025-04-15 11:55:39,982 - 
+--- Request ID: 3bb0fe2b-fbd3-4f5f-b699-dacc7a71a752 --- Data: {"event":"some_event","data":{"email":"test1.poiakov@gmail.com","name":"Ivan Test","phone":"380663132622","comment":"test"}} ---
+2025-04-15 11:56:40,326 - 
+--- Request ID: 813f1d77-73e3-4d5d-a979-e1f0b18f1e94 --- Data: {"event":"some_event","data":{"email":"test1.poiakov@gmail.com","name":"Ivan Test","phone":"380663132622","comment":"test"}} ---
+2025-04-15 11:58:42,949 - 
+--- Request ID: c3a56d56-7769-4653-b9eb-71cb1504f56c --- Data: {"event":"some_event","data":{"email":"test1.poiakov@gmail.com","name":"Ivan Test","phone":"380663132622","comment":"test"}} ---
+2025-04-15 12:07:05,057 - 
+--- Request ID: ff46e706-3ca8-4956-80dc-1fae1502fc26 --- Data: {"event":"some_event","data":{"email":"test1.poiakov@gmail.com","name":"Ivan Test","phone":"380663132622","comment":"test"}} ---
+2025-04-15 13:15:01,062 - 
+--- Request ID: 96b133fe-642e-41c7-a943-8ad9d20d8d2f --- Data: {"event":"some_event","data":{"email":"test1.poiakov@gmail.com","name":"Ivan Test","phone":"380663132622","comment":"test"}} ---
+2025-04-15 13:41:00,186 - 
+--- Request ID: 11b681bc-0243-4510-8310-cc41471b591c --- Data: {"event":"some_event","data":{"email":"test1.poiakov@gmail.com","name":"Ivan Test","phone":"380663132622","comment":"test"}} ---
+2025-04-15 13:43:13,929 - 
+--- Request ID: dc9682f2-7d70-48a0-a363-bcdb6eba865a --- Data: {"event":"some_event","data":{"email":"test1.poiakov@gmail.com","name":"Ivan Test","phone":"380663132622","comment":"test"}} ---
+2025-04-15 13:43:33,389 - 
+--- Request ID: 48da2022-f840-4e53-95d3-1e6773fd4e37 --- Data: {"event":"some_event","data":{"email":"test1.poiakov@gmail.com","name":"Ivan Test","phone":"380663132622","comment":"test2"}} ---
+2025-04-15 13:45:20,511 - 
+--- Request ID: 4b573207-0d78-4a3b-b698-063873b3478d --- Data: {"event":"some_event","data":{"email":"test3.poiakov@gmail.com","name":"Ivan Test","phone":"380663132332","comment":"test3"}} ---
