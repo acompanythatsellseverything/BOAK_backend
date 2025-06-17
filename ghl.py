@@ -9,7 +9,7 @@ import os
 from typing import Optional
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
-
+from fastapi.middleware.cors import CORSMiddleware
 
 class GoHighLevelAPI:
     def __init__(self):
@@ -259,6 +259,13 @@ class WebhookData(BaseModel):
 
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/webhook")
 async def webhook_endpoint(payload: WebhookData):
